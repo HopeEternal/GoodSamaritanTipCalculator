@@ -102,8 +102,16 @@ export default {
     calculate() {
       //Clear Feedback Field if Already Present
       this.feedback = null;
+      this.totalBill = parseInt(this.totalBill);
+      this.percentTip = parseInt(this.percentTip);
+      //Calculate Table Totals
       this.tipAmount = this.totalBill / this.percentTip;
       this.totalAmount = this.totalBill + this.tipAmount;
+      //Calculate Per Person Totals if SplitBill is true
+      if (this.splitBill) {
+        this.tipPerPerson = this.tipAmount / this.partySize;
+        this.totalAmountPerPerson = this.totalAmount / this.partySize;
+      }
     },
     validNum(event) {
       //Only allow numbers in the total bill and party size fields
