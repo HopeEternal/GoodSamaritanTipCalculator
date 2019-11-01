@@ -1,11 +1,11 @@
 <template>
   <div class="container calculator">
-    <h1 class="deep-purple-text">Good Samaritan Tip Calculator</h1>
-    <form @submit.prevent="validation" class="card-panel">
+    <h1 class="deep-purple-text center">Good Samaritan Tip Calculator</h1>
+    <form @submit.prevent="formValidation" class="card-panel">
       <div class="input-field">
         <label for="totalBill">Total Bill:</label>
         <cleave
-          :options="options"
+          :options="optionsBill"
           type="text"
           name="tipForm"
           id="totalBill"
@@ -35,29 +35,31 @@
         <div class="col s6">
           <div class="input-field" v-if="splitBill">
             <label for="partySize">Party Size:</label>
-            <input
-              type="number"
+
+            <cleave
+              :options="optionsParty"
+              type="text"
               name="tipForm"
               id="partySize"
               v-model="partySize"
               v-on:keypress="validNum(event)"
-            />
+            ></cleave>
           </div>
         </div>
       </div>
 
       <p class="red-text center" v-if="feedback">{{ feedback }}</p>
 
-      <div class="row card-panel teal lighten-4 results" v-if="totalAmountCalc > 0">
+      <div class="row card-panel teal lighten-4 results" v-if="totalAmount > 0">
         <div class="col s6">
           <h4>Total</h4>
           <h6 class="center">
             <span>Tip:</span>
-            ${{ tipAmount }}
+            {{ tipAmount | currency }}
           </h6>
           <h6 class="center">
             <span>Bill:</span>
-            ${{ totalAmount }}
+            {{ totalAmount | currency }}
           </h6>
         </div>
         <div class="col s6">
@@ -65,11 +67,11 @@
             <h4>Per Person</h4>
             <h6 class="center">
               <span>Tip:</span>
-              ${{ tipPerPerson }}
+              {{ tipPerPerson | currency }}
             </h6>
             <h6 class="center">
               <span>Bill:</span>
-              ${{ totalAmountPerPerson }}
+              {{ totalAmountPerPerson | currency }}
             </h6>
           </div>
         </div>
@@ -78,11 +80,19 @@
         <button class="btn deep-purple">Calculate!</button>
       </div>
     </form>
+    <footer class="center">
+      <a href="https://www.vecteezy.com/free-vector">Vectors by Vecteezy</a>
+    </footer>
   </div>
 </template>
 
 <script>
 import Cleave from 'vue-cleave-component';
+import Vue from 'vue';
+import Vue2Filters from 'vue2-filters';
+
+Vue.use(Vue2Filters);
+
 export default {
   name: 'Calculator',
   data() {
@@ -92,19 +102,20 @@ export default {
       splitBill: false,
       partySize: null,
       tipAmount: null,
-      tipAmountCalc: 0,
       totalAmount: null,
-      totalAmountCalc: 0,
       tipPerPerson: null,
       totalAmountPerPerson: null,
       feedback: null,
       event: null,
       //Cleave Options
-      options: {
+      optionsBill: {
         numeral: true,
         numeralDecimalMark: '.',
         numeralPositiveOnly: true,
         delimiter: ','
+      },
+      optionsParty: {
+        blocks: [3]
       }
     };
   },
@@ -115,31 +126,14 @@ export default {
       this.totalBill = parseFloat(this.totalBill);
       this.percentTip = parseFloat(this.percentTip);
       //Calculate Table Totals
-      this.tipAmountCalc = this.totalBill * (this.percentTip / 100);
-      this.tipAmount = this.tipAmountCalc.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      this.tipAmount = this.totalBill * (this.percentTip / 100);
 
-      this.totalAmountCalc = this.totalBill + this.tipAmountCalc;
-      this.totalAmount = this.totalAmountCalc.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      this.totalAmount = this.totalBill + this.tipAmount;
+
       //Calculate Per Person Totals if SplitBill is true
       if (this.splitBill) {
-        this.tipPerPerson = (
-          this.tipAmountCalc / this.partySize
-        ).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-        this.totalAmountPerPerson = (
-          this.totalAmountCalc / this.partySize
-        ).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
+        this.tipPerPerson = this.tipAmount / this.partySize;
+        this.totalAmountPerPerson = this.totalAmount / this.partySize;
       }
     },
     validNum(event) {
@@ -152,7 +146,7 @@ export default {
         return true;
       }
     },
-    validation() {
+    formValidation() {
       //Ensure Total Bill and Tip Percentage fields are completed
       if (this.totalBill && this.percentTip) {
         if (this.totalBill < 1) {
@@ -180,6 +174,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+html {
+  background-image: url('../assets/sparkly_background.jpg');
+}
 .calculator form {
   padding: 60px;
   label {
@@ -188,5 +185,16 @@ export default {
 }
 .splitRow {
   height: 60px;
+}
+
+@media only screen and (max-width: 600px) {
+  .calculator h1 {
+    font-size: 2rem;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .calculator h1 {
+    font-size: 1.5rem;
+  }
 }
 </style>
