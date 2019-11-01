@@ -1,37 +1,18 @@
 # tipcalculator
 
-Check it out at https://good-samaritan-tip-calculator.herokuapp.com/
+Now available at https://good-samaritan-tip-calculator.herokuapp.com/
 
-## Project setup
+A small tip calculator built with Vue.js, Cleave.js, and SASS.
 
-```
-npm install
-```
+## Built With
 
-### Compiles and hot-reloads for development
+- [Vue.js](https://https://vuejs.org/) - Front End Framework
+- [Cleave.js](https://github.com/nosir/cleave.js/) - Input Formatter
+- [Node.js](https://nodejs.org/) - JavaScript runtime
+- [Express](https://expressjs.com/) - The web framework used
+- [Babel](https://babeljs.io/) - JavaScript Compiler
+- [Webpack](https://webpack.js.org/) - Project Bundler
 
-```
-npm run serve
-```
+## Authors
 
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Run your tests
-
-```
-npm run test
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- **Risa Lee** - _Front-End Developer, UX/UI Designer_ - [HopeEternal](https://github.com/HopeEternal)

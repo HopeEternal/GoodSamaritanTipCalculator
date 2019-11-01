@@ -158,14 +158,15 @@ export default {
         }
         //Remind User not to enter less than 1 or more than 1000 people per party!
         else if (
-          this.partySize !== null &&
+          this.splitBill &&
           (this.partySize > 1000 || this.partySize < 1)
         ) {
-          if (this.partySize.indexOf('.') !== -1) {
-            this.feedback = 'You cannot have a partial person, you barbarian!';
-          } else {
-            this.feedback = 'Please enter a Party Size between 2 and 1000!';
-          }
+          this.feedback = 'Please enter a Party Size between 2 and 1000!';
+        } else if (
+          this.partySize !== null &&
+          this.partySize.indexOf('.') !== -1
+        ) {
+          this.feedback = 'You cannot have a partial person, you barbarian!';
         }
 
         //0 or 1 entered in the Party Size will uncheck split bill
