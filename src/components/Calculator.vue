@@ -157,14 +157,14 @@ export default {
             'Please enter an amount below 1,000,000,000 in the Total Bill field!';
         }
         //Remind User not to enter less than 1 or more than 1000 people per party!
-        else if (this.partySize !== null && this.partySize > 2) {
-          if (
-            this.partySize.indexOf('.') !== -1 ||
-            this.partySize < 1 ||
-            this.partySize > 1000
-          ) {
-            this.feedback =
-              'Please enter a Party Size under 1000 and also, you cannot have half of a person, you barbarian!';
+        else if (
+          this.partySize !== null &&
+          (this.partySize > 1000 || this.partySize < 1)
+        ) {
+          if (this.partySize.indexOf('.') !== -1) {
+            this.feedback = 'You cannot have a partial person, you barbarian!';
+          } else {
+            this.feedback = 'Please enter a Party Size between 2 and 1000!';
           }
         }
 
