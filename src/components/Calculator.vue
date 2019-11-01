@@ -2,6 +2,9 @@
   <div class="container calculator">
     <h1 class="deep-purple-text text-lighten-2 center">Good Samaritan Tip Calculator</h1>
     <form @submit.prevent="formValidation" class="card-panel">
+      <p
+        class="center"
+      >Complete the form below to obtain the appropriate tip amount and determine if you're a Bronze, Silver, Platinum or Gold tipper!</p>
       <div class="input-field">
         <label for="totalBill">Total Bill:</label>
         <cleave
@@ -10,24 +13,23 @@
           name="tipForm"
           id="totalBill"
           v-model="totalBill"
-          v-on:keypress="validNum(event)"
         ></cleave>
       </div>
       <div class="input">
         <label class="left">Tip percentage:</label>
         <select class="browser-default" value="Tip Percentage" name="tipForm" v-model="percentTip">
           <option value disabled selected>Tip percentage:</option>
-          <option value="10">10% - Peasant</option>
-          <option value="15">15% - Average Chap</option>
-          <option value="18">18% - Philanthropist</option>
-          <option value="20">20% - Bill Gates</option>
+          <option value="10">10% - Bronze: Peasant</option>
+          <option value="15">15% - Silver: Average Chap</option>
+          <option value="18">18% - Platinum: Philanthropist</option>
+          <option value="20">20% - Gold: Bill Gates</option>
         </select>
       </div>
       <div class="row splitRow">
         <div class="col s6">
           <div class="input-field">
             <label>
-              <input type="checkbox" v-model="splitBill" />
+              <input type="checkbox" v-model="splitBill" v-on:click="clearPartyResults" />
               <span>Split Bill?</span>
             </label>
           </div>
@@ -42,7 +44,6 @@
               name="tipForm"
               id="partySize"
               v-model="partySize"
-              v-on:keypress="validNum(event)"
             ></cleave>
           </div>
         </div>
@@ -51,7 +52,7 @@
       <p class="red-text center" v-if="feedback">{{ feedback }}</p>
 
       <div class="row card-panel white-text results" v-if="totalAmount > 0">
-        <div class="col s12 m4 l4 resText">
+        <div class="col s12 m6 l4 resText">
           <h5>Total</h5>
           <h6 class>
             <span>Tip:</span>
@@ -62,7 +63,7 @@
             {{ totalAmount | currency }}
           </h6>
         </div>
-        <div class="col s12 m4 l4 resText">
+        <div class="col s12 m6 l4 resText">
           <div v-if="splitBill">
             <h5>Per Person</h5>
             <h6 class>
@@ -75,7 +76,7 @@
             </h6>
           </div>
         </div>
-        <div class="col s12 m4 l4 right">
+        <div class="col s12 m0 l4 right">
           <img class="responsive-img" :src="whichMedal()" alt="A shiny star award!" />
         </div>
       </div>
@@ -111,6 +112,7 @@ export default {
       feedback: null,
       event: null,
       rank: null,
+      field: null,
       //Cleave Options
       optionsBill: {
         numeral: true,
@@ -119,7 +121,9 @@ export default {
         delimiter: ','
       },
       optionsParty: {
-        blocks: [3]
+        numeral: true,
+        numeralDecimalMark: '',
+        delimiter: ''
       }
     };
   },
@@ -140,21 +144,10 @@ export default {
         this.totalAmountPerPerson = this.totalAmount / this.partySize;
       }
     },
-    validNum(event) {
-      //Only allow numbers in the total bill and party size fields
-      event = event ? event : window.event;
-      var charCode = event.which ? event.which : event.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        event.preventDefault();
-      } else {
-        return true;
-      }
-    },
     formValidation() {
-      //Ensure Total Bill and percentTipTip Percentage fields are completed
-
+      //Ensure Total Bill and percentTip Percentage fields are completed
       if (this.totalBill && this.percentTip) {
-        if (this.totalBill < 1) {
+        if (this.totalBill <= 0 || this.totalBill == '.') {
           this.feedback =
             'Please enter an amount above 0 in the Total Bill field!';
         }
@@ -163,6 +156,18 @@ export default {
           this.feedback =
             'Please enter an amount below 1,000,000,000 in the Total Bill field!';
         }
+        //Remind User not to enter less than 1 or more than 1000 people per party!
+        else if (this.partySize !== null && this.partySize > 2) {
+          if (
+            this.partySize.indexOf('.') !== -1 ||
+            this.partySize < 1 ||
+            this.partySize > 1000
+          ) {
+            this.feedback =
+              'Please enter a Party Size under 1000 and also, you cannot have half of a person, you barbarian!';
+          }
+        }
+
         //0 or 1 entered in the Party Size will uncheck split bill
         else if (this.partySize < 2) {
           this.splitBill = false;
@@ -173,6 +178,16 @@ export default {
         }
       } else {
         this.feedback = 'Please complete all form fields!';
+      }
+    },
+    clearPartyResults() {
+      if (this.splitBill === true) {
+        this.splitBill = false;
+        this.partySize = null;
+        this.tipPerPerson = null;
+        this.totalAmountPerPerson = null;
+      } else if (this.splitBill === false) {
+        this.splitBill = true;
       }
     },
     whichMedal() {
@@ -197,7 +212,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .calculator form {
-  padding: 60px;
+  padding: 5% 10%;
   label {
     font-size: 1em;
   }
@@ -208,10 +223,11 @@ export default {
     background: #191919;
     padding: 0px;
     .resText {
-      padding: 20px;
+      padding: 15px 10px 15px 25px;
     }
     img {
       margin-bottom: -5px;
+      //height: 100%;
     }
   }
 }
