@@ -23,6 +23,7 @@
       </div>
 
       <!--  <p class="red-text center" v-if="feedback">{{ feedback }}</p>-->
+      <!--  <p class="purple-text center" v-if="tipAmount">{{ feedback }}</p>-->
       <div class="field center">
         <button class="btn deep-purple">Calculate!</button>
       </div>
@@ -37,13 +38,13 @@ export default {
     return {
       totalBill: null,
       percentTip: null,
-      partySize: null
+      partySize: null,
+      tipAmount: null,
+      totalAmount: null
     };
   },
   methods: {
-    calculate() {
-      console.log('Button works');
-    }
+    calculate() {}
   }
 };
 </script>
