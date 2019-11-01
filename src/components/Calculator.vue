@@ -153,6 +153,11 @@ export default {
           this.feedback =
             'Please enter an amount above 0 in the Total Bill field!';
         }
+        //Ensure Total Bill does not exceed 999,999,999
+        else if (this.totalBill > 999999999) {
+          this.feedback =
+            'Please enter an amount below 1,000,000,000 in the Total Bill field!';
+        }
         //0 or 1 entered in the Party Size will uncheck split bill
         else if (this.partySize < 2) {
           this.splitBill = false;
@@ -174,9 +179,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-html {
-  background-image: url('../assets/sparkly_background.jpg');
-}
 .calculator form {
   padding: 60px;
   label {
