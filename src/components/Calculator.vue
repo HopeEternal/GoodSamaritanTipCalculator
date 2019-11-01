@@ -8,7 +8,7 @@
         <input type="number" name="tipForm" id="totalBill" v-model="totalBill" />
       </div>
       <div class="input">
-        <label class="tipPercLabel left">Tip percentage:</label>
+        <label class="left">Tip percentage:</label>
         <select class="browser-default" value="Tip Percentage" name="tipForm" v-model="percentTip">
           <option value disabled selected>Tip percentage:</option>
           <option value="10">10%</option>
@@ -17,13 +17,32 @@
           <option value="20">20%</option>
         </select>
       </div>
-      <div class="input-field">
-        <label for="partySize">Party Size:</label>
-        <input type="number" name="tipForm" id="partySize" v-model="partySize" />
+      <div class="row">
+        <div class="col s6">
+          <div class="input-field">
+            <label>
+              <input type="checkbox" v-model="splitBill" />
+              <span>Split Bill?</span>
+            </label>
+          </div>
+        </div>
+        <div class="col s6">
+          <div class="input-field" v-if="splitBill">
+            <label for="partySize">Party Size:</label>
+            <input type="number" name="tipForm" id="partySize" v-model="partySize" />
+          </div>
+        </div>
       </div>
 
-      <!--  <p class="red-text center" v-if="feedback">{{ feedback }}</p>-->
-      <!--  <p class="purple-text center" v-if="tipAmount">{{ feedback }}</p>-->
+      <p class="red-text center" v-if="feedback">{{ feedback }}</p>
+      <h3 class="purple-text center" v-if="tipAmount">
+        <span>Tip:</span>
+        {{ tipAmount }}
+      </h3>
+      <h3 class="purple-text center" v-if="totalAmount">
+        <span>Total Bill:</span>
+        {{ totalAmount }}
+      </h3>
       <div class="field center">
         <button class="btn deep-purple">Calculate!</button>
       </div>
@@ -38,13 +57,23 @@ export default {
     return {
       totalBill: null,
       percentTip: null,
+      splitBill: false,
       partySize: null,
       tipAmount: null,
-      totalAmount: null
+      totalAmount: null,
+      feedback: null
     };
   },
   methods: {
-    calculate() {}
+    calculate() {
+      if (this.totalBill && this.percentTip && this.partySize) {
+        //Calculate Tip... tip is totalBill / percentTip
+        this.tipAmount = this.totalBill / this.percentTip;
+        this.totalAmount = this.totalBill + this.tipAmount;
+      } else {
+        this.feedback = 'Please complete all form fields!';
+      }
+    }
   }
 };
 </script>
