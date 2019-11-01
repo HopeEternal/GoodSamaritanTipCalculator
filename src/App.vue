@@ -17,6 +17,9 @@ export default {
 
 <style lang="scss">
 html {
-  background-image: url('/assets/sparkly_background.jpg');
+  background-image: url('./assets/sparkly_background.png');
+  height: 100%;
+  background-attachment: fixed;
+  background-position: center bottom;
 }
 </style>

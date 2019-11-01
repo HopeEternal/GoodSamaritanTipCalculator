@@ -1,6 +1,6 @@
 <template>
   <div class="container calculator">
-    <h1 class="deep-purple-text center">Good Samaritan Tip Calculator</h1>
+    <h1 class="deep-purple-text text-lighten-2 center">Good Samaritan Tip Calculator</h1>
     <form @submit.prevent="formValidation" class="card-panel">
       <div class="input-field">
         <label for="totalBill">Total Bill:</label>
@@ -50,30 +50,33 @@
 
       <p class="red-text center" v-if="feedback">{{ feedback }}</p>
 
-      <div class="row card-panel teal lighten-4 results" v-if="totalAmount > 0">
-        <div class="col s6">
-          <h4>Total</h4>
-          <h6 class="center">
+      <div class="row card-panel white-text results" v-if="totalAmount > 0">
+        <div class="col s12 m4 l4 resText">
+          <h5>Total</h5>
+          <h6 class>
             <span>Tip:</span>
             {{ tipAmount | currency }}
           </h6>
-          <h6 class="center">
+          <h6 class>
             <span>Bill:</span>
             {{ totalAmount | currency }}
           </h6>
         </div>
-        <div class="col s6">
+        <div class="col s12 m4 l4 resText">
           <div v-if="splitBill">
-            <h4>Per Person</h4>
-            <h6 class="center">
+            <h5>Per Person</h5>
+            <h6 class>
               <span>Tip:</span>
               {{ tipPerPerson | currency }}
             </h6>
-            <h6 class="center">
+            <h6 class>
               <span>Bill:</span>
               {{ totalAmountPerPerson | currency }}
             </h6>
           </div>
+        </div>
+        <div class="col s12 m4 l4 right">
+          <img class="responsive-img" :src="whichMedal()" alt="A shiny star award!" />
         </div>
       </div>
       <div class="field center">
@@ -107,6 +110,7 @@ export default {
       totalAmountPerPerson: null,
       feedback: null,
       event: null,
+      rank: null,
       //Cleave Options
       optionsBill: {
         numeral: true,
@@ -147,7 +151,8 @@ export default {
       }
     },
     formValidation() {
-      //Ensure Total Bill and Tip Percentage fields are completed
+      //Ensure Total Bill and percentTipTip Percentage fields are completed
+
       if (this.totalBill && this.percentTip) {
         if (this.totalBill < 1) {
           this.feedback =
@@ -169,6 +174,18 @@ export default {
       } else {
         this.feedback = 'Please complete all form fields!';
       }
+    },
+    whichMedal() {
+      if (this.percentTip === 10) {
+        this.rank = 'bronze';
+      } else if (this.percentTip === 15) {
+        this.rank = 'silver';
+      } else if (this.percentTip === 18) {
+        this.rank = 'platinum';
+      } else if (this.percentTip === 20) {
+        this.rank = 'gold';
+      }
+      return require('../assets/' + this.rank + '_medal.png');
     }
   },
   components: {
@@ -184,11 +201,26 @@ export default {
   label {
     font-size: 1em;
   }
-}
-.splitRow {
-  height: 60px;
+  .splitRow {
+    height: 65px;
+  }
+  .results {
+    background: #191919;
+    padding: 0px;
+    .resText {
+      padding: 20px;
+    }
+    img {
+      margin-bottom: -5px;
+    }
+  }
 }
 
+@media only screen and (max-width: 1160px) {
+  .calculator .results img {
+    display: none;
+  }
+}
 @media only screen and (max-width: 600px) {
   .calculator h1 {
     font-size: 2rem;
